@@ -46,7 +46,7 @@ def skewness(r):
     Returns a float or a Series
     """
     demeaned_r = r - r.mean()
-    # use the population standard deviation, so set dof=0
+    # use the population standard deviation, so set dof=0. By default it will use N-1
     sigma_r = r.std(ddof=0)
     exp = (demeaned_r**3).mean()
     return exp/sigma_r**3
