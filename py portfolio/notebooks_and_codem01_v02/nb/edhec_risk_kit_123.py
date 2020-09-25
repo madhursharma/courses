@@ -396,6 +396,8 @@ def run_cppi(risky_r, safe_r=None, m=3, start=1000, floor=0.8, riskfree_rate=0.0
 
     if safe_r is None:
         safe_r = pd.DataFrame().reindex_like(risky_r)
+        #TODO: Why cannot we use broadcasting here
+        
         safe_r.values[:] = riskfree_rate/12 # fast way to set all values to a number
     # set up some DataFrames for saving intermediate values
     account_history = pd.DataFrame().reindex_like(risky_r)
