@@ -1,0 +1,138 @@
+Welcome to Alpha Vantage! Here is your API key: G7MRDC02QFMP47BN. Please record this API key for future access to Alpha Vantage.
+
+Best Stock APIs and Industry Landscape in 2020
+The stock API industry, and financial data in general, have nuances that explain quality, evolution, and how knowing this can benefit your algorithms.
+Patrick Collins
+Patrick Collins
+Follow
+Apr 29 · 11 min read
+
+
+
+Table of Contents:
+Executive Summary
+Stock API “Gotchas” — Common Pitfalls to Avoid
+Wait! What about Yahoo Finance API or Google Finance API?
+Best Stock APIs to Use
+Closing Thoughts
+Stock API landscape
+Original Photo by NASA on Unsplash
+Executive Summary
+The financial market data industry has experienced a seismic shift in the digital era, with cloud-first application programming interfaces (APIs) entering the industry landscape that was, until recently, dominated by on-premise systems such as Bloomberg machines or Reuters Eikon.
+In this article, we will review some of the key attributes that make a market data provider reliable and robust. We will then take a closer look at 5 popular data providers:
+Alpha Vantage: Y-Combinator-backed market data provider built for investors and software developers and blessed by a fanbase from the global open-source community.
+Polygon: Powering fintech powerhouses such as Robinhood and Alpaca, Polygon offers nanosecond level realtime stock data streamed directly from all US stock exchanges.
+Xignite: The leading enterprise solution for mission-critical financial applications.
+IEXCloud: A subsidiary of the famed IEX exchange and the “swiss knife” in the financial market data space.
+Intrinio: A wealth of core and alternative data tailored to your specific use case.
+Later in this article, we will take a closer look at each of these data providers. I will also include sample Python codes so that you can more easily integrate your trading & business applications with all the providers!
+Before we dive into the stock market APIs mentioned above, however, let’s first zoom out a bit and examine some of the common pitfalls or “gotchas” when it comes to choosing a reliable market data API. Spoiler alert: free stock APIs are not automatically equivalent to the best stock APIs.
+Stock API “Gotchas” — Common Pitfalls to Avoid
+Stock APIs are programming interfaces that connect financial market data consumers with the relevant data sources. They are a blessing to software developers and investors/traders because these APIs typically have a simple, predictable, and unified way to query market data in a structured format.
+Without a stock market API, a data-driven market participant will need to write complex codes to parse the raw data from the stock exchanges — and yikes, there are over 10 stock exchanges in the US alone, each “speaking” a different language when transmitting the trade data downstream. Things will quickly become unscalable without a stock API or other similar interfaces.
+Despite the magic power of APIs to parse raw financial market data into a clean, normalized, and accessible format, not all API services are created equal and there might be pitfalls or “gotchas” that may not be obvious at first glance. Consider the scenario below:
+You’ve been searching for alpha, making stock price predictions, and signals to trade on, all gathered from your market data provider. When finally, all your countless hours researching, backtesting, and drilling over minute details have finally paid off. You can finally start paper trading!
+Then, your paper trading goes into disaster mode, as you would have lost 5% of your portfolio in the first week.
+*Anxiety Increases*
+You dig a little more and find out that your stock API service provider was giving you data that oscillated between being 1% wrong and 5% wrong, and now you have to start completely over!
+An unreliable stock market data source will throw a wrench into your trading application.
+Photo by Christian Erfurt on Unsplash
+When it comes to identifying a good financial market data source, there are a few things you need to know so that you know what kind of data you’re getting, and how to best work with it, or maybe choose a different provider. Now that I’ve been in the stock data industry for some time now, and having come from an asset manager previously, I have a MUCH better appreciation for a lot of nuances that sometimes are overlooked. Even more than just the quality (which is also often overlooked!)
+Let’s look into it.
+Adjusted vs Unadjusted historical prices
+This is oddly enough one of the biggest mistakes I see people, especially new investors. Stock can have things called “corporate actions” that can retroactively affect the closing price of a stock. Once these corporate actions happen, all the historical data of the underlying company or ticker needs to be updated to make up for this. This is known as the “adjusted price” or “adjusted close”, and is considered to be the “true close price” of a stock.
+One example of a corporate action is a stock split. A 2–1 stock split would mean that a company decided to double the number of shares everyone has, and also cutting the price of that share in half. You can read more about why they would want to do this here. Now if you owned 10 shares of TSLA at $200, you now own 20 shares at $100, but the total value of each is still $2,000.
+What happens when your stock API gives you unadjusted prices
+What a wonky graph!
+When this happens, a stock market API provider will have to go back, and adjust all the prices for this corporate action, so that they are cut in half. Ideally, an API would provide both an “adjusted close” and an “unadjusted close”, as well as when corporate actions happen. If you were to build a strategy around unadjusted close prices, you’d see wild changes in price that would cause your price prediction to go wild!
+Examples of market data providers with adjusted price: Alpha Vantage, IEXCloud, Polygon.io, Intrinio, Xignite, Tiingo
+Aggregation vs Exchange specific
+This one depends a little on what you’re looking for in a strategy, but it’s important for you to know. When you get your data, you need to know whether that price data is from a specific exchange or an aggregation. If you get the pricing from one exchange but never trade on that exchange, then your data will always be off!
+On the other hand, if you don’t really care what exchange you trade on, it will probably be cheaper and a better representation of the market if you get aggregated data. Aggregation can be advantageous because it gives a better price indicator of the market as a whole as opposed to where the price lies on one specific exchange, however, maybe you’re looking for an arbitrage strategy. In that case, exchange specific would be more ideal.
+Which one you choose isn’t as important as knowing which one you are getting, but you should definitely know what kind of data you’re getting!
+Sample providers with aggregated data: Alpha Vantage, eodhistoricaldata
+Sample providers with exchange specific data: Intrinio, Polygon.io, Xignite
+Current Quotes vs Historical
+Ok, you’ve built your strategy using the historical data, now it’s time to go test it with some real-time data! Uh oh! The API you’re using doesn’t have that!
+This is something pretty simple to look out for, but if you’re using a provider for its historical pricing, you might also want to check to see if it has some sort of up-to-date endpoint as well, to stay consistent.
+Always look for oddities or patterns
+This one can seem a bit strange, but you really really need to know your data. Each stock market API platform is going to come with a few quirks of its own. Maybe the price of global exchanges is going to be in that exchange’s currency. Maybe it’s always going to be in USD. Maybe there is a field from the API that tells you what the currency is going to be.
+Are they scraping data from public sites? This is a BIG no-no, you’ll get drastically unreliable data, and often it can be illegal! Often, sites won’t have this information public so be sure to ask!
+Maybe the time zone changes, look for a time zone field. There are multiple little oddities that can come with each API, and often, this can be part of their charm.
+Along with their oddities, look for YOUR oddities. How do you collect your data? WHEN do you collect your data? If you’re looking for the open price of a ticker 40 minutes after the market is open, maybe you want to think about pulling that data a little earlier.
+There is so much to say about knowing your data and it’s oddities, and it’s in every data set. This article gives a much deeper insight into making sure you know where to go and what to do.
+Wait! What about Yahoo Finance API or Google Finance API?
+If you have been in the investing world in the past decade or so, you probably know the two elephants in the room: Yahoo Finance and Google Finance. And yes, both of them used to have APIs that were massively popular. There are some speculations on why these two companies no longer have official, publicly documented stock market APIs, and here is my hypothesis: Google & Yahoo derive much of their revenues from digital advertising, and it is hard, if not impossible, to serve ads via APIs (imagine how difficult it would be to show a Geico ads via a JSON dictionary). The lack of alignment between the advertising business model and the API business model eventually led to the suspension of official support for Yahoo Finance API and Google Finance API.
+Well, Yahoo Finance and Google Finance still exist as websites (with ads of course) for financial market information. And there is still a download button on Yahoo Finance for certain market data:
+the Yahoo Finance website still allows users to download certain stock market data, but the glorious days of Yahoo Finance AP
+Source: Yahoo Finance
+Overall, however, financial data websites are conceptually different from financial data APIs. The former facilitates web browsing, while the latter enables programmatic access and backend scripting of the market.
+Without further ado, let’s take a look at the 5 top-notch and well-documented stock market APIs in the financial data industry below.
+Best Stock APIs to Use
+Alpha Vantage
+Unlike many fintech companies that have established themselves on the Wall Street, Alpha Vantage is more culturally aligned with the Silicon Valley, where it graduated from the prestigious Y Combinator program in 2018. With its Silicon Valley origin, Alpha Vantage is, unsurprisingly, an engineering-driven and product-oriented company. It’s all about building the most accessible and developer-friendly APIs for the world’s software developers and tech-driven investors. Its product portfolio includes stock, ETFs, mutual funds and forex (FX) and derived data such as technical indicators.
+And Alpha Vantage is making sure the API integration is as smooth and frictionless as possible. It has stock APIs in Python, Javascript, PHP, Java, and other programming languages across 400+ open-source repositories on GitHub. It also has official add-ons for Excel and Google Sheets for users who want to access market data via spreadsheets.
+Sample Python Integration Code
+import requests
+import json 
+key = 'XXX'
+ticker = 'AAPL'
+url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol={}&apikey={}'.format(ticker, key)
+response = requests.get(url)print(response.json()) 
+Official API Documentation: https://www.alphavantage.co/documentation/
+Polygon.io
+If you are looking for realtime data streamed directly from all US exchanges, look no further than Polygon. The Atlanta-based company provides ultra low-latency market information for all the 16 exchanges in the US, from NYSE & NASDAQ to over the counter markets (e.g., OTC and pink sheets), hence covering a wide range of investment appetite.
+Polygon has established tenancy in the Equinix NY Datacenters, the same set of datacenters as the New York based exchanges. This means Polygon’s data can faithfully and accurately mirrors the trade actions in those exchanges with nanosecond-level precision. That’s why fintech companies such as Robinhood trust Polygon’s data when it comes to realtime access to the US market.
+Sample Python Integration Code
+import requests
+import json
+key = 'XXX'
+ticker = 'GOOG'
+url = 'https://api.polygon.io/v1/last/stocks/{}?apiKey={}'.format(ticker, key)
+response = requests.get(url)print(response.json())
+Official API Documentation: https://www.polygon.io/docs/#getting-started
+Xignite
+Robinhood, Wealthfront, Betterment, Addepar, MoneyLion — what do they have in common? You guessed it right: all of these high-profile fintech and wealth management companies use Xignite as their financial data provider.
+Founded in 2000, Xignite has kept reinventing itself as the go-to financial data provider for enterprise customers all the way up to the fabled Fortune 500 echelon. It offers cloud-based, institution-grade APIs with unlimited API request quota, which means one can hit Xignite’s server as hard as they want when scaling up their mission-critical business applications.
+Sample Python Integration Code
+import json
+import requests 
+token = 'XXXXX'
+# Register for a token here: https://www.xignite.com/Register
+url = "http://globalcurrencies.xignite.com/xGlobalCurrencies.json/ListCurrencies?_token={}".format(token) 
+response = requests.get(url)
+print(response.json())
+API Catalog: https://www.xignite.com/products
+IEXCloud
+I have always been a fan of the IEX exchange and the Flash Boys revolution. IEX Cloud is the market data service under the IEX umbrella and covers both IEX exchange data and non-IEX information.
+IEX Cloud is to me the “swiss knife” among market data providers, covering stock data, news, forex, options, commodities, economic data, and other alpha-generating datasets. In terms of the data delivery vehicle, IEX Cloud offers REST endpoints in JSON and CSV formats as well as a Server-sent Events (SSE) streaming service as a Web Socket alternative.
+Sample Python Integration Code
+import json
+import requests
+
+token = 'XXXX'
+# Register here https://iexcloud.io/cloud-login#/register/
+symbol = 'IBM'
+url = 'https://cloud.iexapis.com/stable/stock/{}/quote?token={}'.format(symbol, token)
+response = requests.get(url)
+print(response.json())
+Official API Documentation: https://iexcloud.io/docs/api/
+Intrinio
+Most of the data providers we have surveyed so far are more or less an all-you-can-eat service: you subscribe to a plan that instantly unlocks most, if not all, of the API functions. Our next company, Intrinio, offers a fresh take: only pay for the data products/bundles you want. I like the pay-per-service model as it makes investing and app building more focused and deliberate.
+Intrinio offers a wonderful selection of data packages and bundles and is taking the world by storm with its rich set of alternative data. Its delivery vehicle includes REST and WebSockets. Intrinio is founded by Rachel Carpenter, a thought leader in the fintech domain and an inspiring speaker.
+Sample Python Integration Code
+import json
+import requests
+
+key = 'XXXX'
+# Register here at https://intrinio.com/
+ticker = 'FB'
+url = 'https://api-v2.intrinio.com/companies/{}?api_key={}'.format(ticker, key)
+response = requests.get(url)
+print(response.json())
+Official API Documentation: https://docs.intrinio.com/documentation/api_v2/getting_started
+Summary
+Breathe… There is a lot to think about when it comes to stock APIs!
+Photo by Fabian Møller on Unsplash
+Phew…. There are many things to think about when choosing a market data provider, and I hope to have given you some insight. Do you think that I missed some really important pieces? Is there an API that you think addresses one of these issues in a huge way? Let me know in the comments!
+As the founder of Alpha Chain and a developer advocate for Chainlink, I love making content informing users about data, AI, and tech in general.
