@@ -10,11 +10,11 @@ import numpy as np
 
 import requests
 import json 
-def price_option_bs(spot, k, vol, days, rf=0.0, rd=0.0):
+def price_option_bs(spot, k, iv30, days, rf=0.0, rd=0.0):
     '''
     Calculate the Black-Scholes price of the options
-    d1 = [ ln(S/K) + (r + vol/2) * T ] / sqrt(vol * T)  
-    d2= d1 - sqrt ( vol * T) 
+    d1 = [ ln(S/K) + (r + (iv30**2)/2) * T ] / (iv30 * sqrt(T))  
+    d2= d1 - iv30 * sqrt (T) 
     
     Price of European call
     c = Norm(d1) * S - Norm(d2) * K * exp(-rT)
@@ -26,9 +26,9 @@ def price_option_bs(spot, k, vol, days, rf=0.0, rd=0.0):
         Current spot price of the underlying stock.
     k : pandas.Dataframe
         Strike price of the option.
-    vol : float
-        volatility of the option. usually annualized vol is used. Convert to 
-        annual sqrt(daysToExp/255).
+    iv30 : float
+        volatility of the option is it's stddev. Usually daily vol is used. Convert to 
+        annual sqrt(daysToExp/30).
     days : pandas.Dataframe
         no of days to expiration.
     rf : float(), optional
@@ -43,7 +43,7 @@ def price_option_bs(spot, k, vol, days, rf=0.0, rd=0.0):
     #convert traded days to year
     t = days/255.0
     #TODO: adjust the 
-    d1 = sc.log(np.divide(spot, k )) + np.multiply( (rf + vol/2), t)
+    d1 = sc.log(np.divide(spot, k)) + np.multiply((rf + vol/2), t)
     d1 = d1 / np.sqrt(vol * t)
     d2 = d1 - np.sqrt(vol * t)
     c = spot * np.norm(d1) + np.norm(d2) * k * np.exp(-rf * t)
@@ -58,4 +58,19 @@ def get_data(ticker='AAPL'):
     #print(response.json())
     return response
     
-print (get_data().json())
+#print (get_data().json())
+
+def test_option_data():
+    spot_price = 108.22
+    d = pd.read_csv("E:\\GitHub\\coursera\\courses\\py portfolio\\notebooks_and_codem01_v02\\nb\\data\\aapl_options.csv",
+                header='infer', sep=';', parse_dates=True)
+    #Parse dates
+    d["SpotDt"] = pd.to_datetime(d['Spot Date'], format="%m/%d/%y")
+    d["ExpDt"] = pd.to_datetime(d['Expiration Date'], format="%m/%d/%y")
+    #Override Spot Date
+    currDate = datetime.datetime.strptime("09/25/20", "%m/%d/%y")
+    d["SpotDt"] = currDate
+    #Add days to expiration
+    d['Days2Exp'] = d['ExpDt'] - d['SpotDt']
+    d['Spot Price'] = spot_price
+    d['PriceDiff'] = np.subtract (d['Strike'] , spot_price)
