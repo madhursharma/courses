@@ -74,3 +74,5 @@ def test_option_data():
     d['Days2Exp'] = d['ExpDt'] - d['SpotDt']
     d['Spot Price'] = spot_price
     d['PriceDiff'] = np.subtract (d['Strike'] , spot_price)
+    
+    
